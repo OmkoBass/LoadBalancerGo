@@ -13,11 +13,11 @@ var (
 
 	totalBackends = 5
 	backendList   = []*httputil.ReverseProxy{
-		createHost("http://localhost:5000/alive"),
-		createHost("http://localhost:5001/alive"),
-		createHost("http://localhost:5002/alive"),
-		createHost("http://localhost:5003/alive"),
-		createHost("http://localhost:5004/alive"),
+		createHost("http://localhost:5000"),
+		createHost("http://localhost:5001"),
+		createHost("http://localhost:5002"),
+		createHost("http://localhost:5003"),
+		createHost("http://localhost:5004"),
 	}
 )
 

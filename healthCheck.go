@@ -7,12 +7,12 @@ import (
 	"github.com/go-co-op/gocron"
 )
 
-func startHealthCheck() {
+func startHealthCheck(numberOfSeconds int) {
 	// Check each server if it's alive every 5 seconds
 	scheduler := gocron.NewScheduler(time.Local)
 
 	for _, backend := range backendList {
-		_, err := scheduler.Every(5).Seconds().Do(func(server *server) {
+		_, err := scheduler.Every(numberOfSeconds).Seconds().Do(func(server *server) {
 			alive := server.isAlive()
 
 			if alive {

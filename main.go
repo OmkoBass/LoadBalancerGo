@@ -39,7 +39,7 @@ func handleRequest(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Request cannot be handled. Reason: "+err.Error(), http.StatusServiceUnavailable)
 		return
 	}
-	fmt.Println(server.URL)
+	//fmt.Println(server.URL)
 	req.Host = server.URL
 	server.ReverseProxy.ServeHTTP(res, req)
 }

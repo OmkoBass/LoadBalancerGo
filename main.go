@@ -12,13 +12,12 @@ var (
 	mutex              sync.Mutex
 	lastForwardedIndex = 0
 
-	totalBackends = 5
+	totalBackends = 4
 	backendList   = []*server{
-		newServer("Flask-1", "http://localhost:5000"),
-		newServer("Flask-2", "http://localhost:5001"),
-		newServer("Flask-3", "http://localhost:5002"),
-		newServer("Flask-4", "http://localhost:5003"),
-		newServer("Flask-5", "http://localhost:5004"),
+		newServer("Story-Saver", "https://private-story-saver.herokuapp.com"),
+		newServer("Story-Saver-1", "https://private-story-saver-1.herokuapp.com"),
+		newServer("Story-Saver-2", "https://private-story-saver-2.herokuapp.com"),
+		newServer("Story-Saver-3", "https://private-story-saver-3.herokuapp.com"),
 	}
 )
 
@@ -40,7 +39,8 @@ func handleRequest(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Request cannot be handled. Reason: "+err.Error(), http.StatusServiceUnavailable)
 		return
 	}
-
+	fmt.Println(server.URL)
+	req.Host = server.URL
 	server.ReverseProxy.ServeHTTP(res, req)
 }
 

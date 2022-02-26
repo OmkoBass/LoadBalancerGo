@@ -33,7 +33,7 @@ var (
 func main() {
 	http.HandleFunc("/", handleRequest)
 
-	go startHealthCheck(5)
+	go startHealthCheck(300)
 
 	http.ListenAndServe(":8000", nil)
 }

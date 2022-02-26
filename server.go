@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -17,21 +16,20 @@ type server struct {
 
 func newServer(name string, urlToParse string) *server {
 	parsedUrl, _ := url.Parse(urlToParse)
-	fmt.Println(urlToParse)
 
 	targetQuery := parsedUrl.RawQuery
 	reverseProxy := &httputil.ReverseProxy{
 		Director: func(req *http.Request) {
-            req.Host = parsedUrl.Host
+			req.Host = parsedUrl.Host
 			req.URL.Scheme = parsedUrl.Scheme
-            req.URL.Host = parsedUrl.Host
-            req.URL.Path = singleJoiningSlash(parsedUrl.Path, req.URL.Path)
+			req.URL.Host = parsedUrl.Host
+			req.URL.Path = singleJoiningSlash(parsedUrl.Path, req.URL.Path)
 			if targetQuery == "" || req.URL.RawQuery == "" {
-                req.URL.RawQuery = targetQuery + req.URL.RawQuery
-            } else {
-                req.URL.RawQuery = targetQuery + "&" + req.URL.RawQuery
-            }
-        },
+				req.URL.RawQuery = targetQuery + req.URL.RawQuery
+			} else {
+				req.URL.RawQuery = targetQuery + "&" + req.URL.RawQuery
+			}
+		},
 	}
 
 	return &server{
@@ -66,13 +64,13 @@ func (server *server) isAlive() bool {
 }
 
 func singleJoiningSlash(a, b string) string {
-    aslash := strings.HasSuffix(a, "/")
-    bslash := strings.HasPrefix(b, "/")
-    switch {
-    case aslash && bslash:
-        return a + b[1:]
-    case !aslash && !bslash:
-        return a + "/" + b
-    }
-    return a + b
+	aslash := strings.HasSuffix(a, "/")
+	bslash := strings.HasPrefix(b, "/")
+	switch {
+	case aslash && bslash:
+		return a + b[1:]
+	case !aslash && !bslash:
+		return a + "/" + b
+	}
+	return a + b
 }

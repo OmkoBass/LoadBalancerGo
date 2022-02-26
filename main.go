@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
 )
 
 var (
@@ -13,11 +14,19 @@ var (
 	lastForwardedIndex = 0
 
 	totalBackends = 4
-	backendList   = []*server{
-		newServer("Story-Saver", "https://private-story-saver.herokuapp.com"),
-		newServer("Story-Saver-1", "https://private-story-saver-1.herokuapp.com"),
-		newServer("Story-Saver-2", "https://private-story-saver-2.herokuapp.com"),
-		newServer("Story-Saver-3", "https://private-story-saver-3.herokuapp.com"),
+
+	serverListFirst = []*server{
+		newServer("Server-1", "http://localhost:8000"),
+		newServer("Server-2", "http://localhost:8001"),
+		newServer("Server-3", "http://localhost:8002"),
+		newServer("Server-4", "http://localhost:8003"),
+	}
+
+	serverListSecond = []*server{
+		newServer("Server-4", "http://localhost:8004"),
+		newServer("Server-5", "http://localhost:8005"),
+		newServer("Server-6", "http://localhost:8006"),
+		newServer("Server-7", "http://localhost:8007"),
 	}
 )
 
@@ -45,7 +54,28 @@ func handleRequest(res http.ResponseWriter, req *http.Request) {
 }
 
 func getBackend() *server {
-	backend := backendList[lastForwardedIndex]
+	// This is a problem for my usecase
+	// I need to use different servers
+	// dependant on the current date
+	// First half of the month i will be
+	// using serverListFirst
+	// second half of the month i will be
+	// using serverListSecond
+
+	currentTime := time.Now()
+
+	if currentTime.Day() < 15 {
+		backend := serverListFirst[lastForwardedIndex]
+
+		mutex.Lock()
+		lastForwardedIndex = (lastForwardedIndex + 1) % totalBackends
+		mutex.Unlock()
+
+		fmt.Println(backend.Name)
+		return backend
+	}
+
+	backend := serverListSecond[lastForwardedIndex]
 
 	mutex.Lock()
 	lastForwardedIndex = (lastForwardedIndex + 1) % totalBackends
